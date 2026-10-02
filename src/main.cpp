@@ -21,7 +21,6 @@ void setup()
   pinMode(pinBotao[0], INPUT_PULLUP);
   pinMode(pinBotao[1], INPUT_PULLUP);
   pinMode(pinBotao[2], INPUT_PULLUP);
-  Serial.begin(9600);
 }
 
 void loop() 
@@ -36,7 +35,6 @@ void loop()
   {
     if (!estadoAtualBotao[0])
     {
-      Serial.println ("APERTOU CIMA");
       if(contador < 15)
       {
         contador++;
@@ -52,7 +50,6 @@ void loop()
   {
     if (!estadoAtualBotao[1])
     {
-      Serial.println ("APERTOU BAIXO");
       if (contador > 0)
       {
         contador--;
@@ -68,7 +65,6 @@ void loop()
   {
     if (!estadoAtualBotao[2])
     {
-      Serial.println ("APERTOU ENTER");
       binarioLed();
       valor = contador;
     }
@@ -80,12 +76,9 @@ void loop()
 
 void binarioLed()
 {
-  Serial.println ("COMECOU BINARIO");
-  bool binario[4] = {0, 0, 0, 0};
+  bool binario[4] = {};
   for (int i = 3; i > 0; i--)
   {
-    Serial.println ("CONVERTENDO BINARIO");
-    Serial.print (binario[i]);
     binario[i] = valor % 2;
     valor /= 2;
   }
@@ -93,8 +86,6 @@ void binarioLed()
 
   for (int i = 0; i < 4; i++)
   {
-    Serial.println ("MUDANDO PRO LED");
-    Serial.print (binario[i]);
     digitalWrite(pinLed[i], binario[i]);
   }
 }
