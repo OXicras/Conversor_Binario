@@ -39,6 +39,7 @@ void loop()
       if(contador < 15)
       {
         contador++;
+        lcd.clear();
       }
         
     }
@@ -53,6 +54,7 @@ void loop()
       if (contador > 0)
       {
         contador--;
+        lcd.clear();
       }
     }
   }
@@ -79,15 +81,21 @@ void loop()
 
 void binarioLed()
 {
-  bool binario[4] = {};
+  bool binario[4] = {0, 0, 0, 0};
   for (int i = 3; i > 0; i--)
   {
     binario[i] = valor % 2;
     valor /= 2;
   }
-  binario[3] = valor;
+  binario[0] = valor;
+
   for (int i = 0; i < 4; i++)
   {
     digitalWrite(pinLed[i], binario[i]);
   }
+  lcd.setCursor(0, 2);
+  lcd.print(binario[0]);
+  lcd.print(binario[1]);
+  lcd.print(binario[2]);
+  lcd.print(binario[3]);
 }
