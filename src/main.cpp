@@ -1,15 +1,12 @@
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
-#include <Botao.h>
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 const int pinBotao [3] = {11, 12, 13};
 const int pinLed[4] = {4, 5, 6, 7};
-Botao botaoCima;
-Botao botaoBaixo;
-Botao botaoEnter;
 int contador = 0;
+int valor;
 
 void binarioLed();
 
@@ -28,39 +25,69 @@ void setup()
 
 void loop() 
 {
-  botaoCima.atualizar();
-  botaoBaixo.atualizar();
-  botaoEnter.atualizar();
+  bool estadoAtualBotao[3] = {digitalRead(pinBotao[0]), digitalRead(pinBotao[1]), digitalRead(pinBotao[2])};
+  static bool estadoAnteriorBotao[3] = {1, 1, 1};
   
-
-  lcd.setCursor(10, 1);
+  lcd.setCursor(9, 1);
   lcd.print(contador);
 
-  if(botaoCima.pressionou())
+//! BOTAO CIMA
+  if (estadoAtualBotao[0] != estadoAnteriorBotao[0])
   {
-    if (contador < 15)
-      contador++;
+    if (!estadoAtualBotao[0])
+    {
+      if(contador < 15)
+      {
+        contador++;
+      }
+        
+    }
   }
-  if(botaoBaixo.pressionou())
+  estadoAnteriorBotao[0] = estadoAtualBotao[0];
+
+  //! BOTAO BAIXO
+  if (estadoAtualBotao[1] != estadoAnteriorBotao[1])
   {
-    if (contador > 0)
-      contador--;
+    if (!estadoAtualBotao[1])
+    {
+      if (contador > 0)
+      {
+        contador--;
+      }
+    }
   }
-  if(botaoEnter.pressionou())
+  estadoAnteriorBotao[1] = estadoAtualBotao[1];
+
+
+  //! BOTAO ENTER
+  if (estadoAtualBotao[2] != estadoAnteriorBotao[2])
   {
-    binarioLed();
+    if (!estadoAtualBotao[2])
+    {
+      binarioLed();
+      valor = contador;
+      digitalWrite(pinLed[3], LOW);
+      digitalWrite(pinLed[2], LOW);
+      digitalWrite(pinLed[1], LOW);
+      digitalWrite(pinLed[0], LOW);
+    }
   }
+  estadoAnteriorBotao[2] = estadoAtualBotao[2];
+
+  
 }
 
 void binarioLed()
 {
-  if (contador%2 == 0)
+  bool binario[4] = {};
+  for (int i = 3; i > 0; i--)
   {
-    digitalWrite(pinLed[3], HIGH);
+    binario[i] = valor % 2;
+    valor /= 2;
   }
-  else
+  binario[3] = valor;
+  for (int i = 0; i < 4; i++)
   {
-    digitalWrite(pinLed[3], LOW);
+    digitalWrite(pinLed[i], binario[i]);
   }
-
 }
