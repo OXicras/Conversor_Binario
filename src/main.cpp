@@ -65,8 +65,8 @@ void loop()
   {
     if (!estadoAtualBotao[2])
     {
-      binarioLed();
       valor = contador;
+      binarioLed();
     }
   }
   estadoAnteriorBotao[2] = estadoAtualBotao[2];
